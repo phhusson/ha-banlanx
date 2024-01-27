@@ -44,7 +44,7 @@ async def async_setup_platform(
         _LOGGER.warning("Got ble device " + str(ble_device))
     # Assign configuration variables.
     # The configuration check takes care they are present.
-    mac = config[CONF_MAC]
+    mac = str(config[CONF_MAC])
     bluetooth.async_register_callback(
         hass, _async_discovered_device, {"service_uuid": "0000ffe0-0000-1000-8000-00805f9b34fb", "connectable": True}, bluetooth.BluetoothScanningMode.ACTIVE)
 
