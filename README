@@ -1,0 +1,22 @@
+If you have a led strip controlled by the BanlanX Android app, and want to control that led strip with HomeAssistant, this is for you!
+
+
+How to install:
+> git clone https://github.com/phhusson/ha-banlanx ~/.homeassistant/custom_components/
+
+Add this to your configuration.xml:
+
+light:
+  platform: banlanx
+  mac: 31:00:00:00:09:F5
+
+You'll need to find the MAC address of your lightstrip.
+If you're lucky, you'll find it listed in the logs of this module with logs like `Got ble device 31:00:00:00:09:F5` (but you'll need to setup the module with a wrong MAC first)
+
+Please note that the lightstrip doesn't support concurrent BLE access, so you need to force kill the BanlanX app from your smartphone, or even turn bluetooth off, to let home assistant grab the BLE connection
+
+Also note that currently only some effects are supported, and RGB isn't supported. Those aren't much work to implement, so if you want them, just ping me!
+
+Effects are usually registered with their length/speed, if you need help tinkering with it, feel free to ask.
+
+Currently only one lightstrip is supported. Again, that's rather easy to do, so do ask.

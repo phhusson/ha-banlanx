@@ -1,0 +1,79 @@
+Those are raw notes I took to reverse engineer the protocol. This is probably not interesting or understandable to you
+
+This has been done by taking bluetooth captures off an Android smartphone
+
+./logs/btsnoop_hci.log
+31:00:00:00:09:f5
+
+[NEW] Primary Service (Handle 0x0000)
+        /org/bluez/hci0/dev_31_00_00_00_09_F5/service0001
+        0000ffe0-0000-1000-8000-00805f9b34fb
+        Unknown
+[NEW] Characteristic (Handle 0x0000)
+        /org/bluez/hci0/dev_31_00_00_00_09_F5/service0001/char0002
+        0000ffe1-0000-1000-8000-00805f9b34fb
+        Unknown
+[NEW] Descriptor (Handle 0x0000)
+        /org/bluez/hci0/dev_31_00_00_00_09_F5/service0001/char0002/desc0004
+        00002902-0000-1000-8000-00805f9b34fb
+        Client Characteristic Configuration
+[NEW] Primary Service (Handle 0x0000)
+        /org/bluez/hci0/dev_31_00_00_00_09_F5/service0005
+        5833ff01-9b8b-5191-6142-22a4536ef123
+        Vendor specific
+[NEW] Characteristic (Handle 0x0000)
+        /org/bluez/hci0/dev_31_00_00_00_09_F5/service0005/char0006
+        5833ff02-9b8b-5191-6142-22a4536ef123
+        Vendor specific
+[NEW] Characteristic (Handle 0x0000)
+        /org/bluez/hci0/dev_31_00_00_00_09_F5/service0005/char0008
+        5833ff03-9b8b-5191-6142-22a4536ef123
+        Vendor specific
+[NEW] Descriptor (Handle 0x0000)
+        /org/bluez/hci0/dev_31_00_00_00_09_F5/service0005/char0008/desc000a
+        00002902-0000-1000-8000-00805f9b34fb
+        Client Characteristic Configuration
+[CHG] Device 31:00:00:00:09:F5 UUIDs: 0000ffe0-0000-1000-8000-00805f9b34fb
+[CHG] Device 31:00:00:00:09:F5 UUIDs: 5833ff01-9b8b-5191-6142-22a4536ef123
+[CHG] Device 31:00:00:00:09:F5 ServicesResolved: yes
+
+
+bluetoothctl
+menu gatt
+select-attribute 0000ffe1-0000-1000-8000-00805f9b34fb
+
+brightness 255 => 112
+Effect length 112 =>  143
+speed 10 => 8
+
+color
+#707070
+#703232
+#367032
+#76F76E
+
+
+Set comet mode = A0 63 01 04 (04 = comet mode)
+off = A0 62 01 00
+
+Start:
+A0 70 00
+
+A0 62 01 01 # ON
+gatt.write "0xA0 0x62 0x01 0x01"
+gatt.write "0xA0 0x62 0x01 0x00"
+gatt.write "0xA0 0x66 0x01 0xFF"
+A0 62 01 00 # OFF
+A0 66 01 70 # Set brightness to 112
+A0 68 01 8f # Set effect length to 143
+A0 67 01 08 # Set effect speed to 8
+A0 63 01 be # Set another effect? Set RGB
+A0 69 04 FF 72 72 70 # Set GRB to FF7272 brightness 70
+                  ^--- brightness
+
+mycomet =
+A0 67 01 0A # Set effect speed to 10/max
+A0 68 01 73 # Set effect length
+A0 63 01 04 # Set effect type
+
+

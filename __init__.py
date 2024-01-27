@@ -1,0 +1,1 @@
+"""BanlanX Light Strip integration"""
